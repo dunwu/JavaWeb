@@ -1,6 +1,13 @@
 package io.github.dunwu.javatech.jmh;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -26,11 +33,11 @@ public class StringBuilderBenchmark {
 
     @Benchmark
     public void testStringAdd() {
-        String a = "";
+        String str = "";
         for (int i = 0; i < 10; i++) {
-            a += i;
+            str += i;
         }
-        // System.out.println(a);
+        System.out.println(str);
     }
 
     @Benchmark
@@ -39,7 +46,7 @@ public class StringBuilderBenchmark {
         for (int i = 0; i < 10; i++) {
             sb.append(i);
         }
-        // System.out.println(sb.toString());
+        System.out.println(sb.toString());
     }
 
 }

@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 10, time = 5, timeUnit = TimeUnit.SECONDS)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class QuickStart {
+public class JmhQuickStart {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-            .include(QuickStart.class.getSimpleName())
+            .include(JmhQuickStart.class.getSimpleName())
             .forks(1)
             .build();
         new Runner(opt).run();

@@ -1,12 +1,27 @@
 # JMH 应用指南
 
-## 简介
+## 基准测试简介
 
-### 什么是 JMH
+### 什么是基准测试
 
-[JMH](http://openjdk.java.net/projects/code-tools/jmh/) 即 Java Microbenchmark Harness，这是专门用于进行代码的微基准测试的一套工具 API。
+基准测试是指通过设计科学的测试方法、测试工具和测试系统，实现对一类测试对象的某项性能指标进行定量的和可对比的测试。
 
-JMH 由 OpenJDK/Oracle 里面那群开发了 Java 编译器的大牛们所开发 。何谓 Micro Benchmark 呢？ 简单地说就是在 method 层面上的 benchmark，精度可以精确到 **微秒级**。
+现代软件常常都把高性能作为目标。那么，何为高性能，性能就是快，更快吗？显然，如果没有一个量化的标准，难以衡量性能的好坏。
+
+不同的基准测试其具体内容和范围也存在很大的不同。如果是专业的性能工程师，更加熟悉的可能是类似SPEC提供的工业标准的系统级测试；而对于大多数 Java 开发者，更熟悉的则是范围相对较小、关注点更加细节的微基准测试（Micro-Benchmark）。何谓 Micro Benchmark 呢？ 简单地说就是在 method 层面上的 benchmark，精度可以精确到 **微秒级**。
+
+### 何时需要微基准测试
+
+微基准测试大多是 API 级别的性能测试。
+
+微基准测试的适用场景：
+
+- 如果开发公共类库、中间件，会被其他模块经常调用的 API。
+- 对于性能，如响应延迟、吞吐量有严格要求的核心 API。
+
+## JMH 简介
+
+[JMH(即 Java Microbenchmark Harness)](http://openjdk.java.net/projects/code-tools/jmh/)，是目前主流的微基准测试框架。JMH 是由 Hotspot JVM 团队专家开发的，除了支持完整的基准测试过程，包括预热、运行、统计和报告等，还支持 Java 和其他 JVM 语言。更重要的是，它针对 Hotspot JVM 提供了各种特性，以保证基准测试的正确性，整体准确性大大优于其他框架，并且，JMH 还提供了用近乎白盒的方式进行 Profiling 等工作的能力。
 
 ### 为什么需要 JMH
 
@@ -38,7 +53,7 @@ JMH 由 OpenJDK/Oracle 里面那群开发了 Java 编译器的大牛们所开发
 - `Operation` - benchmark 方法中，被测量操作的执行。如果被测试的操作在 benchmark 方法中循环执行，可以使用`@OperationsPerInvocation`表明循环次数，使测试结果为单次 operation 的性能。
 - `Warmup` - 在实际进行 benchmark 前先进行预热。因为某个函数被调用多次之后，JIT 会对其进行编译，通过预热可以使测量结果更加接近真实情况。
 
-## 快速入门
+## JMH 快速入门
 
 ### 添加 maven 依赖
 
@@ -107,7 +122,7 @@ public class StringBuilderBenchmark {
 
 （1）初始化 **benchmarking** 工程
 
-```
+```shell
 $ mvn archetype:generate \
           -DinteractiveMode=false \
           -DarchetypeGroupId=org.openjdk.jmh \
@@ -119,14 +134,14 @@ $ mvn archetype:generate \
 
 （2）构建 benchmark
 
-```
+```shell
 cd test/
 mvn clean install
 ```
 
 （3）运行 benchmark
 
-```
+```shell
 java -jar target/benchmarks.jar
 ```
 
@@ -134,7 +149,7 @@ java -jar target/benchmarks.jar
 
 执行 main 方法，耐心等待测试结果，最终会生成一个测试报告，内容大致如下；
 
-```
+```shell
 # JMH version: 1.22
 # VM version: JDK 1.8.0_181, Java HotSpot(TM) 64-Bit Server VM, 25.181-b13
 # VM invoker: C:\Program Files\Java\jdk1.8.0_181\jre\bin\java.exe
@@ -248,7 +263,7 @@ StringBuilderBenchmark.testStringAdd         thrpt   20  21996.435 ±  412.955  
 StringBuilderBenchmark.testStringBuilderAdd  thrpt   20  84487.902 ± 4355.525  ops/ms
 ```
 
-## API
+## JMH API
 
 下面来了解一下 jmh 常用 API
 
