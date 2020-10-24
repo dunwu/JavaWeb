@@ -6,22 +6,22 @@
 >
 > 环境要求：JDK7+
 
-## 简介
+## 1. Tomcat 简介
 
-### Tomcat 是什么
+### 1.1. Tomcat 是什么
 
 Tomcat 是由 Apache 开发的一个 Servlet 容器，实现了对 Servlet 和 JSP 的支持，并提供了作为 Web 服务器的一些特有功能，如 Tomcat 管理和控制平台、安全域管理和 Tomcat 阀等。
 
 由于 Tomcat 本身也内含了一个 HTTP 服务器，它也可以被视作一个单独的 Web 服务器。但是，不能将 Tomcat 和 Apache HTTP 服务器混淆，Apache HTTP 服务器是一个用 C 语言实现的 HTTP Web 服务器；这两个 HTTP web server 不是捆绑在一起的。Tomcat 包含了一个配置管理工具，也可以通过编辑 XML 格式的配置文件来进行配置。
 
-### Tomcat 重要目录
+### 1.2. Tomcat 重要目录
 
 - **/bin** - Tomcat 脚本存放目录（如启动、关闭脚本）。 `*.sh` 文件用于 Unix 系统； `*.bat` 文件用于 Windows 系统。
 - **/conf** - Tomcat 配置文件目录。
 - **/logs** - Tomcat 默认日志目录。
 - **/webapps** - webapp 运行的目录。
 
-### web 工程发布目录结构
+### 1.3. web 工程发布目录结构
 
 一般 web 项目路径结构
 
@@ -52,9 +52,23 @@ Tomcat 是由 Apache 开发的一个 Servlet 容器，实现了对 Servlet 和 J
 
 `/WEB-INF/web.xml`：web 应用的部署配置文件。它是工程中最重要的配置文件，它描述了 servlet 和组成应用的其它组件，以及应用初始化参数、安全管理约束等。
 
-## QuickStart
+### Tomcat 功能
 
-### 安装
+Tomcat 支持的 I/O 模型有：
+
+- NIO：非阻塞 I/O，采用 Java NIO 类库实现。
+- NIO2：异步 I/O，采用 JDK 7 最新的 NIO2 类库实现。
+- APR：采用 Apache 可移植运行库实现，是 C/C++ 编写的本地库。
+
+Tomcat 支持的应用层协议有：
+
+- HTTP/1.1：这是大部分 Web 应用采用的访问协议。
+- AJP：用于和 Web 服务器集成（如 Apache）。
+- HTTP/2：HTTP 2.0 大幅度的提升了 Web 性能。
+
+## 2. Tomcat 入门
+
+### 2.1. 安装
 
 **前提条件**
 
@@ -84,11 +98,11 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 
 ![img](http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/tomcat.png!zp)
 
-### 配置
+### 2.2. 配置
 
 本节将列举一些重要、常见的配置项。详细的 Tomcat8 配置可以参考 [Tomcat 8 配置官方参考文档](http://tomcat.apache.org/tomcat-8.5-doc/config/index.html) 。
 
-#### Server
+#### 2.2.1. Server
 
 > Server 元素表示整个 Catalina servlet 容器。
 >
@@ -103,7 +117,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | port      | 服务器等待关机命令的 TCP / IP 端口号。设置为-1 以禁用关闭端口。          |                                              |
 | shutdown  | 必须通过 TCP / IP 连接接收到指定端口号的命令字符串，以关闭 Tomcat。      |                                              |
 
-#### Service
+#### 2.2.2. Service
 
 > Service 元素表示一个或多个连接器组件的组合，这些组件共享一个用于处理传入请求的引擎组件。Server 中可以有多个 Service。
 
@@ -125,7 +139,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 </Server>
 ```
 
-#### Executor
+#### 2.2.3. Executor
 
 > Executor 表示可以在 Tomcat 中的组件之间共享的线程池。
 
@@ -147,7 +161,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 </Service>
 ```
 
-#### Connector
+#### 2.2.4. Connector
 
 > Connector 代表连接组件。Tomcat 支持三种协议：HTTP/1.1、HTTP/2.0、AJP。
 
@@ -174,7 +188,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | minSpareThreads   | 如果指定了 Executor, 此属性忽略;否则为 Connector 创建线程池的最小活跃线程数 | 默认 10                                                                                                                                                                                                         |
 | processorCache    | 协议处理器缓存 Processor 对象的大小                                         | -1 表示不限制.当不使用 servlet3.0 的异步处理情况下: 如果配置 Executor,配置为 Executor 的 maxThreads;否则配置为 Connnector 的 maxThreads. 如果使用 Serlvet3.0 异步处理, 取 maxThreads 和 maxConnections 的最大值 |
 
-#### Context
+#### 2.2.5. Context
 
 > Context 元素表示一个 Web 应用程序，它在特定的虚拟主机中运行。每个 Web 应用程序都基于 Web 应用程序存档（WAR）文件，或者包含相应的解包内容的相应目录，如 Servlet 规范中所述。
 
@@ -191,7 +205,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | reloadable                 | /WEB-INF/classes/ 和/WEB-INF/lib/ 目录中 class 文件发生变化是否自动重新加载 | 默认为 false                                         |
 | swallowOutput              | true 情况下, System.out 和 System.err 输出将被定向到 web 应用日志中         | 默认为 false                                         |
 
-#### Engine
+#### 2.2.6. Engine
 
 > Engine 元素表示与特定的 Catalina 服务相关联的整个请求处理机器。它接收并处理来自一个或多个连接器的所有请求，并将完成的响应返回给连接器，以便最终传输回客户端。
 
@@ -202,7 +216,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | defaultHost | 默认主机名，用于标识将处理指向此服务器上主机名称但未在此配置文件中配置的请求的主机。 | 这个名字必须匹配其中一个嵌套的主机元素的名字属性。                 |
 | name        | 此引擎的逻辑名称，用于日志和错误消息。                                               | 在同一服务器中使用多个服务元素时，每个引擎必须分配一个唯一的名称。 |
 
-#### Host
+#### 2.2.7. Host
 
 > Host 元素表示一个虚拟主机，它是一个服务器的网络名称（如“www.mycompany.com”）与运行 Tomcat 的特定服务器的关联。
 
@@ -219,13 +233,13 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | deployOnStartup            | Tomcat 启动时是否自动 deploy                                                                 | 默认为 true                                  |
 | failCtxIfServletStartFails | 配置为 true 情况下,任何 load-on-startup >=0 的 servlet 启动失败,则其对应的 Contxt 也启动失败 | 默认为 false                                 |
 
-#### Cluster
+#### 2.2.8. Cluster
 
 由于在实际开发中，我从未用过 Tomcat 集群配置，所以没研究。
 
-### 启动
+### 2.3. 启动
 
-#### 部署方式
+#### 2.3.1. 部署方式
 
 这种方式要求本地必须安装 Tomcat 。
 
@@ -237,9 +251,9 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 >
 > 以上步骤是最简单的示例。步骤中的 war 包解压路径、启动端口以及一些更多的功能都可以修改配置文件来定制 （主要是 `server.xml` 或 `context.xml` 文件）。
 
-#### 嵌入式
+#### 2.3.2. 嵌入式
 
-##### API 方式
+##### 2.3.2.1. API 方式
 
 在 pom.xml 中添加依赖
 
@@ -296,7 +310,7 @@ public class SimpleTomcatServer {
 >
 > [**示例项目**](https://github.com/dunwu/JavaStack/tree/master/codes/javatool/server)
 
-##### 使用 maven 插件启动（不推荐）
+##### 2.3.2.2. 使用 maven 插件启动（不推荐）
 
 不推荐理由：这种方式启动 maven 虽然最简单，但是有一个很大的问题是，真的很久很久没发布新版本了（最新版本发布时间：2013-11-11）。且貌似只能找到 Tomcat6 、Tomcat7 插件。
 
@@ -321,7 +335,7 @@ public class SimpleTomcatServer {
 
 成功后，可以访问 `http://localhost:8080/xxx` （xxx 是 ${project.artifactId} 指定的项目名）。
 
-#### IDE 插件
+#### 2.3.3. IDE 插件
 
 常见 Java IDE 一般都有对 Tomcat 的支持。
 
@@ -343,9 +357,25 @@ public class SimpleTomcatServer {
 
 文中的嵌入式启动示例可以参考[**我的示例项目**](https://github.com/dunwu/JavaStack/tree/master/codes/javatool/server)
 
-## Tomcat 工作原理
+## 3. Tomcat 架构
 
-### Tomcat 主要组件
+Tomcat 要实现 2 个核心功能：
+
+- 处理 Socket 连接，负责网络字节流与 Request 和 Response 对象的转化。
+- 加载和管理 Servlet，以及具体处理 Request 请求。
+
+因此 Tomcat 设计了两个核心组件来分别做这两件事情：
+
+- 连接器（Connector）负责和外部通信
+- 容器（Container）负责内部处理
+
+### 连接器
+
+Tomcat 支持多种 I/O 模型和应用层协议。为了实现这点，一个容器可能对接多个连接器，就好比一个房间有多个门。但是单独的连接器或者容器都不能对外提供服务，需要把它们组装起来才能工作，组装后这个整体叫作 Service 组件。Tomcat 内可能有多个 Service，这样的设计也是出于灵活性的考虑。通过在 Tomcat 中配置多个 Service，可以实现通过不同的端口号来访问同一台机器上部署的不同应用。
+
+## 4. Tomcat 工作原理
+
+### 4.1. Tomcat 主要组件
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Tomcat主要组件.jpg!zp" width="500" >
@@ -362,7 +392,7 @@ public class SimpleTomcatServer {
 - **Pipeline** - 在容器中充当管道的作用，管道中可以设置各种 valve(阀门)，请求和响应在经由管 道中各个阀门处理，提供了一种灵活可配置的处理请求和响应的机制。
 - **Naming** - 命名服务，JNDI， Java 命名和目录接口，是一组在 Java 应用中访问命名和目录服务的 API。命名服务将名称和对象联系起来，使得我们可以用名称访问对象，目录服务也是一种命名 服务，对象不但有名称，还有属性。Tomcat 中可以使用 JNDI 定义数据源、配置信息，用于开发 与部署的分离。
 
-#### Container 组件
+#### 4.1.1. Container 组件
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Tomcat-Container组件.jpg!zp" width="400" >
@@ -373,9 +403,9 @@ public class SimpleTomcatServer {
 - **Context** - Web 应用上下文，包含多个 Wrapper，负责 web 配置的解析、管 理所有的 Web 资源；
 - **Wrapper** - 最底层的容器，是对 Servlet 的封装，负责 Servlet 实例的创 建、执行和销毁。
 
-### Tomcat 生命周期
+### 4.2. Tomcat 生命周期
 
-#### Tomcat 生命周期管理
+#### 4.2.1. Tomcat 生命周期管理
 
 Tomcat 为了方便管理组件和容器的生命周期，定义了从创建、启动、到停止、销毁共 12 中状态，tomcat 生命周期管理了内部状态变化的规则控制，组件和容器只需实现相应的生命周期 方法即可完成各生命周期内的操作(initInternal、startInternal、stopInternal、 destroyInternal)；
 
@@ -394,7 +424,7 @@ Tomcat 各类容器的配置过程就是通过添加 listener 的方式来进行
 - **HostConfig** - 主要处理部署应用，解析应用 META-INF/context.xml 并创建应用的 Context。
 - **ContextConfig** - 主要解析并合并 web.xml，扫描应用的各类 web 资源 (filter、servlet、listener)。
 
-#### Tomcat 的启动过程
+#### 4.2.2. Tomcat 的启动过程
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Tomcat启动过程.jpg!zp" width="600">
@@ -426,7 +456,7 @@ for (Future<Void> result ： results) {
 }
 ```
 
-##### Web 应用的部署方式
+##### 4.2.2.1. Web 应用的部署方式
 
 注：catalina.home：安装目录;catalina.base：工作目录;默认值 user.dir
 
@@ -461,7 +491,7 @@ ContextConfig 解析 web.xml 顺序：
 - 扫描 web 应用和 jar 中的注解(Filter、Listener、Servlet)就是上述步骤中进行的。
 - 容器的定期执行：backgroundProcess，由 ContainerBase 来实现的，并且只有在顶层容器 中才会开启线程。(backgroundProcessorDelay=10 标志位来控制)
 
-#### 请求处理过程
+#### 4.2.3. 请求处理过程
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/请求处理过程.png!zp" width="600">
@@ -472,7 +502,7 @@ ContextConfig 解析 web.xml 顺序：
 3. 容器之间层层调用,最终调用业务 servlet 的 service 方法
 4. Connector 将 response 流中的数据写到 socket 中
 
-#### Pipeline 与 Valve
+#### 4.2.4. Pipeline 与 Valve
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Pipeline与Valve.png!zp" width="600">
@@ -486,25 +516,25 @@ Valve 中主要的三个方法:setNext、getNext、invoke;valve 之间的关系�
 
 各层容器对应的 basic valve 分别是 StandardEngineValve、StandardHostValve、 StandardContextValve、StandardWrapperValve。
 
-### Connector 流程
+### 4.3. Connector 流程
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/connector.png!zp" width="600">
 </div>
 
-#### 阻塞 IO
+#### 4.3.1. 阻塞 IO
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/阻塞IO.png!zp" width="600">
 </div>
 
-#### 非阻塞 IO
+#### 4.3.2. 非阻塞 IO
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/非阻塞IO.png!zp" width="600">
 </div>
 
-#### IO 多路复用
+#### 4.3.3. IO 多路复用
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/IO多路复用.png!zp" width="600">
@@ -514,7 +544,7 @@ Valve 中主要的三个方法:setNext、getNext、invoke;valve 之间的关系�
 
 IO 多路复用的好处在于可同时监听多个 socket 的可读和可写事件，这样就能使得应用可以同时监听多个 socket，释放了应用线程资源。
 
-#### Tomcat 各类 Connector 对比
+#### 4.3.4. Tomcat 各类 Connector 对比
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Tomcat各类Connector对比.jpg!zp" width="500">
@@ -547,7 +577,7 @@ CoyoteAdapter 是 Connector 到 Container 的适配器，Http11NioProcessor 调�
 
 Mapper 主要处理 http url 到 servlet 的映射规则的解析，对外提供 map 方法
 
-### Comet
+### 4.4. Comet
 
 Comet 是一种用于 web 的推送技术，能使服务器实时地将更新的信息传送到客户端，而无须客户端发出请求
 在 WebSocket 出来之前，如果不适用 comet，只能通过浏览器端轮询 Server 来模拟实现服务器端推送。
@@ -568,7 +598,7 @@ Note：
 - End 和 Error 时间触发时应关闭当前 comet 会话，即调用 CometEvent 的 close 方法
   Note：在事件触发时要做好线程安全的操作
 
-### 异步 Servlet
+### 4.5. 异步 Servlet
 
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/传统Servlet处理流程.png!zp" >
@@ -612,17 +642,15 @@ Note :
 onError/ onTimeout 触发后，会紧接着回调 onComplete
 onComplete 执行后，就不可再操作 request 和 response
 
-## 资料
+## 5. 参考资料
 
-### 官方
+- **官方**
+  - [Tomcat 官方网站](http://tomcat.apache.org/)
+  - [Tomcat Wiki](http://wiki.apache.org/tomcat/FrontPage)
+  - [Tomee 官方网站](http://tomee.apache.org/)
 
-- [Tomcat 官方网站](http://tomcat.apache.org/)
-- [Tomcat Wiki](http://wiki.apache.org/tomcat/FrontPage)
-- [Tomee 官方网站](http://tomee.apache.org/)
-
-### 第三方
-
-- [Creating a Web App with Bootstrap and Tomcat Embedded](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/basic_app_embedded_tomcat/basic_app-tomcat-embedded.html)
-- [Tomcat 组成与工作原理](https://juejin.im/post/58eb5fdda0bb9f00692a78fc)
-- [Tomcat 工作原理](https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/index.html)
-- [Tomcat 设计模式分析](https://www.ibm.com/developerworks/cn/java/j-lo-tomcat2/index.html?ca=drs-)
+- **文章**
+  - [Creating a Web App with Bootstrap and Tomcat Embedded](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/basic_app_embedded_tomcat/basic_app-tomcat-embedded.html)
+  - [Tomcat 组成与工作原理](https://juejin.im/post/58eb5fdda0bb9f00692a78fc)
+  - [Tomcat 工作原理](https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/index.html)
+  - [Tomcat 设计模式分析](https://www.ibm.com/developerworks/cn/java/j-lo-tomcat2/index.html?ca=drs-)

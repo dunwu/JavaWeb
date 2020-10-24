@@ -6,35 +6,35 @@
 
 <!-- TOC depthFrom:2 depthTo:3 -->
 
-- [一、Mybatis 简介](#一mybatis-简介)
-  - [什么是 MyBatis](#什么是-mybatis)
-  - [MyBatis vs. Hibernate](#mybatis-vs-hibernate)
-- [二、快速入门](#二快速入门)
-- [三、Mybatis 核心 API](#三mybatis-核心-api)
-  - [SqlSessionFactoryBuilder](#sqlsessionfactorybuilder)
-  - [SqlSessionFactory](#sqlsessionfactory)
-  - [SqlSession](#sqlsession)
-  - [映射器](#映射器)
-- [四、Mybatis 原理](#四mybatis-原理)
-  - [MyBatis 的架构](#mybatis-的架构)
-  - [接口层](#接口层)
-  - [数据处理层](#数据处理层)
-  - [框架支撑层](#框架支撑层)
-  - [引导层](#引导层)
-  - [主要组件](#主要组件)
-- [五、Mybatis 配置](#五mybatis-配置)
-- [六、SQL XML 映射文件](#六sql-xml-映射文件)
-- [参考资料](#参考资料)
+- [1. Mybatis 简介](#1-mybatis-简介)
+  - [1.1. 什么是 MyBatis](#11-什么是-mybatis)
+  - [1.2. MyBatis vs. Hibernate](#12-mybatis-vs-hibernate)
+- [2. 快速入门](#2-快速入门)
+- [3. Mybatis 核心 API](#3-mybatis-核心-api)
+  - [3.1. SqlSessionFactoryBuilder](#31-sqlsessionfactorybuilder)
+  - [3.2. SqlSessionFactory](#32-sqlsessionfactory)
+  - [3.3. SqlSession](#33-sqlsession)
+  - [3.4. 映射器](#34-映射器)
+- [4. Mybatis 原理](#4-mybatis-原理)
+  - [4.1. MyBatis 的架构](#41-mybatis-的架构)
+  - [4.2. 接口层](#42-接口层)
+  - [4.3. 数据处理层](#43-数据处理层)
+  - [4.4. 框架支撑层](#44-框架支撑层)
+  - [4.5. 引导层](#45-引导层)
+  - [4.6. 主要组件](#46-主要组件)
+- [5. Mybatis 配置](#5-mybatis-配置)
+- [6. SQL XML 映射文件](#6-sql-xml-映射文件)
+- [7. 参考资料](#7-参考资料)
 
 <!-- /TOC -->
 
-## 一、Mybatis 简介
+## 1. Mybatis 简介
 
-### 什么是 MyBatis
+### 1.1. 什么是 MyBatis
 
 MyBatis 是一款持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生类型、接口和 Java 的 POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录。
 
-### MyBatis vs. Hibernate
+### 1.2. MyBatis vs. Hibernate
 
 MyBatis 和 Hibernate 都是 Java 世界中比较流行的 ORM 框架。我们应该了解其各自的优势，根据项目的需要去抉择在开发中使用哪个框架。
 
@@ -50,17 +50,17 @@ MyBatis 和 Hibernate 都是 Java 世界中比较流行的 ORM 框架。我们�
 - Hibernate 数据库移植性很好，MyBatis 的数据库移植性不好，不同的数据库需要写不同 SQL。
 - Hibernate 有更好的二级缓存机制，可以使用第三方缓存。MyBatis 本身提供的缓存机制不佳。
 
-## 二、快速入门
+## 2. 快速入门
 
 > [Mybatis 官方文档之入门](http://www.mybatis.org/mybatis-3/zh/getting-started.html) 已经写得很简洁易懂，不再赘述。
 
-## 三、Mybatis 核心 API
+## 3. Mybatis 核心 API
 
 > 核心 API 请参考：「 [Mybatis 官方文档之 Java API](http://www.mybatis.org/mybatis-3/zh/java-api.html) 」
 
 ![img](http://dunwu.test.upcdn.net/snap/1556022483200.png)
 
-### SqlSessionFactoryBuilder
+### 3.1. SqlSessionFactoryBuilder
 
 - **SqlSessionFactoryBuilder 职责**
 
@@ -72,7 +72,7 @@ MyBatis 和 Hibernate 都是 Java 世界中比较流行的 ORM 框架。我们�
 
 这个类可以被实例化、使用和丢弃，一旦创建了 `SqlSessionFactory`，就不再需要它了。 因此 `SqlSessionFactoryBuilder` 实例的最佳作用域是方法作用域（也就是局部方法变量）。
 
-### SqlSessionFactory
+### 3.2. SqlSessionFactory
 
 - **SqlSessionFactory 职责**
 
@@ -84,7 +84,7 @@ MyBatis 和 Hibernate 都是 Java 世界中比较流行的 ORM 框架。我们�
 
 `SqlSessionFactory` 一旦被创建就应该在应用的运行期间一直存在，没有任何理由丢弃它或重新创建另一个实例。最简单的方法就是使用单例模式或者静态单例模式。
 
-### SqlSession
+### 3.3. SqlSession
 
 ![img](http://dunwu.test.upcdn.net/snap/1556105326238.png)
 
@@ -113,15 +113,15 @@ try {
 }
 ```
 
-### 映射器
+### 3.4. 映射器
 
 - **映射器职责**
 
 映射器是一些由用户创建的、绑定 SQL 语句的接口。
 
-各个 insert、update、delete 和 select 方法都很强大，但也有些繁琐。更通用的方式是使用映射器类来执行映射语句。一个映射器类就是一个仅需声明与 SqlSession 方法相匹配的方法的接口类。
+`SqlSession` 中的 `insert`、`update`、`delete` 和 `select` 方法都很强大，但也有些繁琐。更通用的方式是使用映射器类来执行映射语句。一个映射器类就是一个仅需声明与 `SqlSession` 方法相匹配的方法的接口类。
 
-下面的示例展示了一些方法签名以及它们是如何映射到 SqlSession 上的。
+下面的示例展示了一些方法签名以及它们是如何映射到 `SqlSession` 上的。
 
 ```java
 public interface AuthorMapper {
@@ -166,17 +166,17 @@ try {
 
 MyBatis 是一个 XML 驱动的框架。配置信息是基于 XML 的，而且映射语句也是定义在 XML 中的。MyBatis 3 以后，支持注解配置。注解配置基于配置 API；而配置 API 基于 XML 配置。
 
-Mybatis 支持诸如 @Insert、@Update、@Delete、@Select、@Result 等注解。
+Mybatis 支持诸如 `@Insert`、`@Update`、`@Delete`、`@Select`、`@Result` 等注解。
 
 > 详细内容请参考：[Mybatis 官方文档之 sqlSessions](http://www.mybatis.org/mybatis-3/zh/java-api.html#sqlSessions)，其中列举了 Mybatis 支持的注解清单，以及基本用法。
 
-## 四、Mybatis 原理
+## 4. Mybatis 原理
 
-### MyBatis 的架构
+### 4.1. MyBatis 的架构
 
 ![img](http://dunwu.test.upcdn.net/snap/1556104494030.png)
 
-### 接口层
+### 4.2. 接口层
 
 接口层负责和数据库交互的方式
 
@@ -207,7 +207,7 @@ MyBatis 将配置文件中的每一个 `<mapper>` 节点抽象为一个 Mapper �
 
 MyBatis 引用 Mapper 接口这种调用方式，纯粹是为了满足面向接口编程的需要。（其实还有一个原因是在于，面向接口的编程，使得用户在接口上可以使用注解来配置 SQL 语句，这样就可以脱离 XML 配置文件，实现“0 配置”）。
 
-### 数据处理层
+### 4.3. 数据处理层
 
 数据处理层可以说是 MyBatis 的核心，从大的方面上讲，它要完成两个功能：
 
@@ -224,7 +224,7 @@ MyBatis 引用 Mapper 接口这种调用方式，纯粹是为了满足面向接�
 
 动态 SQL 语句生成之后，MyBatis 将执行 SQL 语句，并将可能返回的结果集转换成 `List<E>` 列表。MyBatis 在对结果集的处理中，支持结果集关系一对多和多对一的转换，并且有两种支持方式，一种为嵌套查询语句的查询，还有一种是嵌套结果集的查询。
 
-### 框架支撑层
+### 4.4. 框架支撑层
 
 #### 事务管理机制
 
@@ -270,14 +270,14 @@ MyBatis 将数据缓存设计成两级结构，分为一级缓存、二级缓存
 
 传统的 MyBatis 配置 SQL 语句方式就是使用 XML 文件进行配置的，但是这种方式不能很好地支持面向接口编程的理念，为了支持面向接口的编程，MyBatis 引入了 Mapper 接口的概念，面向接口的引入，对使用注解来配置 SQL 语句成为可能，用户只需要在接口上添加必要的注解即可，不用再去配置 XML 文件了，但是，目前的 MyBatis 只是对注解配置 SQL 语句提供了有限的支持，某些高级功能还是要依赖 XML 配置文件配置 SQL 语句。
 
-### 引导层
+### 4.5. 引导层
 
 引导层是配置和启动 MyBatis 配置信息的方式。MyBatis 提供两种方式来引导 MyBatis ：
 
 1. 基于 XML 配置文件的方式
 2. 基于 Java API 的方式
 
-### 主要组件
+### 4.6. 主要组件
 
 从 MyBatis 代码实现的角度来看，MyBatis 的主要组件有以下几个：
 
@@ -297,7 +297,7 @@ MyBatis 将数据缓存设计成两级结构，分为一级缓存、二级缓存
 <div align="center">
 <img src="http://dunwu.test.upcdn.net/cs/java/javaweb/standalone/orm/mybatis/mybaits流程图2.png">
 </div>
-## 五、Mybatis 配置
+## 5. Mybatis 配置
 
 > 配置的详细内容请参考：「 [Mybatis 官方文档之配置](http://www.mybatis.org/mybatis-3/zh/configuration.html) 」 。
 
@@ -316,7 +316,7 @@ MyBatis 的配置文件包含了会深深影响 MyBatis 行为的设置和属性
 - [databaseIdProvider（数据库厂商标识）](http://www.mybatis.org/mybatis-3/zh/configuration.html#databaseIdProvider)
 - [mappers（映射器）](http://www.mybatis.org/mybatis-3/zh/configuration.html#mappers)
 
-## 六、SQL XML 映射文件
+## 6. SQL XML 映射文件
 
 > SQL XML 映射文件详细内容请参考：「 [Mybatis 官方文档之 XML 映射文件](http://www.mybatis.org/mybatis-3/zh/sqlmap-xml.html) 」。
 
@@ -332,7 +332,7 @@ XML 映射文件只有几个顶级元素：
 - `delete` – 映射删除语句
 - `select` – 映射查询语句
 
-## 参考资料
+## 7. 参考资料
 
 - **官方**
   - [Mybatis Github](https://github.com/mybatis/mybatis-3)
