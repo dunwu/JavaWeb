@@ -6,6 +6,31 @@
 >
 > 环境要求：JDK7+
 
+<!-- TOC depthFrom:2 depthTo:3 -->
+
+- [1. Tomcat 简介](#1-tomcat-简介)
+    - [1.1. Tomcat 是什么](#11-tomcat-是什么)
+    - [1.2. Tomcat 重要目录](#12-tomcat-重要目录)
+    - [1.3. web 工程发布目录结构](#13-web-工程发布目录结构)
+    - [1.4. Tomcat 功能](#14-tomcat-功能)
+- [2. Tomcat 入门](#2-tomcat-入门)
+    - [2.1. 安装](#21-安装)
+    - [2.2. 配置](#22-配置)
+    - [2.3. 启动](#23-启动)
+- [3. Tomcat 架构](#3-tomcat-架构)
+    - [3.1. Service](#31-service)
+    - [3.2. 连接器](#32-连接器)
+    - [3.3. 容器](#33-容器)
+- [4. Tomcat 工作原理](#4-tomcat-工作原理)
+    - [4.1. Tomcat 主要组件](#41-tomcat-主要组件)
+    - [4.2. Tomcat 生命周期](#42-tomcat-生命周期)
+    - [4.3. Connector 流程](#43-connector-流程)
+    - [4.4. Comet](#44-comet)
+    - [4.5. 异步 Servlet](#45-异步-servlet)
+- [5. 参考资料](#5-参考资料)
+
+<!-- /TOC -->
+
 ## 1. Tomcat 简介
 
 ### 1.1. Tomcat 是什么
@@ -52,7 +77,7 @@ Tomcat 是由 Apache 开发的一个 Servlet 容器，实现了对 Servlet 和 J
 
 `/WEB-INF/web.xml`：web 应用的部署配置文件。它是工程中最重要的配置文件，它描述了 servlet 和组成应用的其它组件，以及应用初始化参数、安全管理约束等。
 
-### Tomcat 功能
+### 1.4. Tomcat 功能
 
 Tomcat 支持的 I/O 模型有：
 
@@ -172,7 +197,7 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 | asyncTimeout          | Servlet3.0 规范中的异步请求超时                                                             | 默认 30s                                                                                                                                        |
 | port                  | 请求连接的 TCP Port                                                                         | 设置为 0,则会随机选取一个未占用的端口号                                                                                                         |
 | protocol              | 协议. 一般情况下设置为 HTTP/1.1,这种情况下连接模型会在 NIO 和 APR/native 中自动根据配置选择 |                                                                                                                                                 |
-| URIEncoding           | 对 URI 的编码方式.                                                                        | 如果设置系统变量 org.apache.catalina.STRICT_SERVLET_COMPLIANCE 为 true,使用 ISO-8859-1 编码;如果未设置此系统变量且未设置此属性, 使用 UTF-8 编码 |
+| URIEncoding           | 对 URI 的编码方式.                                                                          | 如果设置系统变量 org.apache.catalina.STRICT_SERVLET_COMPLIANCE 为 true,使用 ISO-8859-1 编码;如果未设置此系统变量且未设置此属性, 使用 UTF-8 编码 |
 | useBodyEncodingForURI | 是否采用指定的 contentType 而不是 URIEncoding 来编码 URI 中的请求参数                       |                                                                                                                                                 |
 
 以下属性在标准的 Connector(NIO, NIO2 和 APR/native)中有效:
@@ -222,16 +247,16 @@ tar -zxf apache-tomcat-8.5.24.tar.gz
 
 **属性表**
 
-| 属性                       | 说明                                                                                         | 备注                                         |
-| -------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| name                       | 名称                                                                                         | 用于日志输出                                 |
-| appBase                    | 虚拟主机对应的应用基础路径                                                                   | 可以是个绝对路径, 或${CATALINA_BASE}相对路径 |
-| xmlBase                    | 虚拟主机 XML 基础路径,里面应该有 Context xml 配置文件                                        | 可以是个绝对路径, 或${CATALINA_BASE}相对路径 |
-| createDirs                 | 当 appBase 和 xmlBase 不存在时,是否创建目录                                                  | 默认为 true                                  |
-| autoDeploy                 | 是否周期性的检查 appBase 和 xmlBase 并 deploy web 应用和 context 描述符                      | 默认为 true                                  |
-| deployIgnore               | 忽略 deploy 的正则                                                                           |                                              |
-| deployOnStartup            | Tomcat 启动时是否自动 deploy                                                                 | 默认为 true                                  |
-| failCtxIfServletStartFails | 配置为 true 情况下,任何 load-on-startup >=0 的 servlet 启动失败,则其对应的 Contxt 也启动失败 | 默认为 false                                 |
+| 属性                       | 说明                                                                                         | 备注                                          |
+| -------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| name                       | 名称                                                                                         | 用于日志输出                                  |
+| appBase                    | 虚拟主机对应的应用基础路径                                                                   | 可以是个绝对路径, 或\${CATALINA_BASE}相对路径 |
+| xmlBase                    | 虚拟主机 XML 基础路径,里面应该有 Context xml 配置文件                                        | 可以是个绝对路径, 或\${CATALINA_BASE}相对路径 |
+| createDirs                 | 当 appBase 和 xmlBase 不存在时,是否创建目录                                                  | 默认为 true                                   |
+| autoDeploy                 | 是否周期性的检查 appBase 和 xmlBase 并 deploy web 应用和 context 描述符                      | 默认为 true                                   |
+| deployIgnore               | 忽略 deploy 的正则                                                                           |                                               |
+| deployOnStartup            | Tomcat 启动时是否自动 deploy                                                                 | 默认为 true                                   |
+| failCtxIfServletStartFails | 配置为 true 情况下,任何 load-on-startup >=0 的 servlet 启动失败,则其对应的 Contxt 也启动失败 | 默认为 false                                  |
 
 #### 2.2.8. Cluster
 
@@ -333,7 +358,7 @@ public class SimpleTomcatServer {
 
 运行 `mvn tomcat7:run` 命令，启动 Tomcat。
 
-成功后，可以访问 `http://localhost:8080/xxx` （xxx 是 ${project.artifactId} 指定的项目名）。
+成功后，可以访问 `http://localhost:8080/xxx` （xxx 是 \${project.artifactId} 指定的项目名）。
 
 #### 2.3.3. IDE 插件
 
@@ -359,19 +384,128 @@ public class SimpleTomcatServer {
 
 ## 3. Tomcat 架构
 
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201113193431.png)
+
 Tomcat 要实现 2 个核心功能：
 
 - 处理 Socket 连接，负责网络字节流与 Request 和 Response 对象的转化。
 - 加载和管理 Servlet，以及具体处理 Request 请求。
 
-因此 Tomcat 设计了两个核心组件来分别做这两件事情：
+为此，Tomcat 设计了两个核心组件：
 
-- 连接器（Connector）负责和外部通信
-- 容器（Container）负责内部处理
+- **连接器（Connector）**：负责和外部通信
+- **容器（Container）**：负责内部处理
 
-### 连接器
+### 3.1. Service
+
+Tomcat 支持的 I/O 模型有：
+
+- NIO：非阻塞 I/O，采用 Java NIO 类库实现。
+- NIO2：异步 I/O，采用 JDK 7 最新的 NIO2 类库实现。
+- APR：采用 Apache 可移植运行库实现，是 C/C++ 编写的本地库。
+
+Tomcat 支持的应用层协议有：
+
+- HTTP/1.1：这是大部分 Web 应用采用的访问协议。
+- AJP：用于和 Web 服务器集成（如 Apache）。
+- HTTP/2：HTTP 2.0 大幅度的提升了 Web 性能。
 
 Tomcat 支持多种 I/O 模型和应用层协议。为了实现这点，一个容器可能对接多个连接器，就好比一个房间有多个门。但是单独的连接器或者容器都不能对外提供服务，需要把它们组装起来才能工作，组装后这个整体叫作 Service 组件。Tomcat 内可能有多个 Service，这样的设计也是出于灵活性的考虑。通过在 Tomcat 中配置多个 Service，可以实现通过不同的端口号来访问同一台机器上部署的不同应用。
+
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201111093124.png)
+
+一个 Tomcat 实例有一个或多个 Service；一个 Service 有多个 Connector 和 Container。Connector 和 Container 之间通过标准的 ServletRequest 和 ServletResponse 通信。
+
+### 3.2. 连接器
+
+连接器对 Servlet 容器屏蔽了协议及 I/O 模型等的区别，无论是 HTTP 还是 AJP，在容器中获取到的都是一个标准的 ServletRequest 对象。
+
+连接器的主要功能是：
+
+- 网络通信
+- 应用层协议解析
+- Tomcat Request/Response 与 ServletRequest/ServletResponse 的转化
+
+Tomcat 设计了 3 个组件来实现这 3 个功能，分别是 **`EndPoint`**、**`Processor`** 和 **`Adapter`**。
+
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201111101440.png)
+
+组件间通过抽象接口交互。这样做还有一个好处是**封装变化。**这是面向对象设计的精髓，将系统中经常变化的部分和稳定的部分隔离，有助于增加复用性，并降低系统耦合度。网络通信的 I/O 模型是变化的，可能是非阻塞 I/O、异步 I/O 或者 APR。应用层协议也是变化的，可能是 HTTP、HTTPS、AJP。浏览器端发送的请求信息也是变化的。但是整体的处理逻辑是不变的，EndPoint 负责提供字节流给 Processor，Processor 负责提供 Tomcat Request 对象给 Adapter，Adapter 负责提供 ServletRequest 对象给容器。
+
+如果要支持新的 I/O 方案、新的应用层协议，只需要实现相关的具体子类，上层通用的处理逻辑是不变的。由于 I/O 模型和应用层协议可以自由组合，比如 NIO + HTTP 或者 NIO2 + AJP。Tomcat 的设计者将网络通信和应用层协议解析放在一起考虑，设计了一个叫 ProtocolHandler 的接口来封装这两种变化点。各种协议和通信模型的组合有相应的具体实现类。比如：Http11NioProtocol 和 AjpNioProtocol。
+
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201027091819.png)
+
+#### ProtocolHandler 组件
+
+##### EndPoint
+
+EndPoint 是通信端点，即通信监听的接口，是具体的 Socket 接收和发送处理器，是对传输层的抽象，因此 EndPoint 是用来实现 TCP/IP 协议的。
+
+EndPoint 是一个接口，对应的抽象实现类是 AbstractEndpoint，而 AbstractEndpoint 的具体子类，比如在 NioEndpoint 和 Nio2Endpoint 中，有两个重要的子组件：Acceptor 和 SocketProcessor。
+
+其中 Acceptor 用于监听 Socket 连接请求。SocketProcessor 用于处理接收到的 Socket 请求，它实现 Runnable 接口，在 Run 方法里调用协议处理组件 Processor 进行处理。为了提高处理能力，SocketProcessor 被提交到线程池来执行。而这个线程池叫作执行器（Executor)。
+
+##### Processor
+
+如果说 EndPoint 是用来实现 TCP/IP 协议的，那么 Processor 用来实现 HTTP 协议，Processor 接收来自 EndPoint 的 Socket，读取字节流解析成 Tomcat Request 和 Response 对象，并通过 Adapter 将其提交到容器处理，Processor 是对应用层协议的抽象。
+
+Processor 是一个接口，定义了请求的处理等方法。它的抽象实现类 AbstractProcessor 对一些协议共有的属性进行封装，没有对方法进行实现。具体的实现有 AJPProcessor、HTTP11Processor 等，这些具体实现类实现了特定协议的解析方法和请求处理方式。
+
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201113185929.png)
+
+从图中我们看到，EndPoint 接收到 Socket 连接后，生成一个 SocketProcessor 任务提交到线程池去处理，SocketProcessor 的 Run 方法会调用 Processor 组件去解析应用层协议，Processor 通过解析生成 Request 对象后，会调用 Adapter 的 Service 方法。
+
+##### Adapter
+
+由于协议不同，客户端发过来的请求信息也不尽相同，Tomcat 定义了自己的 Request 类来“存放”这些请求信息。ProtocolHandler 接口负责解析请求并生成 Tomcat Request 类。但是这个 Request 对象不是标准的 ServletRequest，也就意味着，不能用 Tomcat Request 作为参数来调用容器。Tomcat 的解决方案是引入 CoyoteAdapter，这是适配器模式的经典运用，连接器调用 CoyoteAdapter 的 Sevice 方法，传入的是 Tomcat Request 对象，CoyoteAdapter 负责将 Tomcat Request 转成 ServletRequest，再调用容器的 Service 方法。
+
+### 3.3. 容器
+
+Tomcat 设计了 4 种容器，分别是 Engine、Host、Context 和 Wrapper。
+
+- **Engine** - Servlet 的顶层容器，包含一 个或多个 Host 子容器；
+- **Host** - 虚拟主机，负责 web 应用的部署和 Context 的创建；
+- **Context** - Web 应用上下文，包含多个 Wrapper，负责 web 配置的解析、管理所有的 Web 资源；
+- **Wrapper** - 最底层的容器，是对 Servlet 的封装，负责 Servlet 实例的创 建、执行和销毁。
+
+#### 请求定位 Servlet 过程
+
+Tomcat 是怎么确定请求是由哪个 Wrapper 容器里的 Servlet 来处理的呢？答案是，Tomcat 是用 Mapper 组件来完成这个任务的。
+
+举例来说，假如有一个网购系统，有面向网站管理人员的后台管理系统，还有面向终端客户的在线购物系统。这两个系统跑在同一个 Tomcat 上，为了隔离它们的访问域名，配置了两个虚拟域名：`manage.shopping.com`和`user.shopping.com`，网站管理人员通过`manage.shopping.com`域名访问 Tomcat 去管理用户和商品，而用户管理和商品管理是两个单独的 Web 应用。终端客户通过`user.shopping.com`域名去搜索商品和下订单，搜索功能和订单管理也是两个独立的 Web 应用。如下所示，演示了 url 应声 Servlet 的处理流程。
+
+![](https://raw.githubusercontent.com/dunwu/images/dev/snap/20201113192022.jpg)
+
+假如有用户访问一个 URL，比如图中的`http://user.shopping.com:8080/order/buy`，Tomcat 如何将这个 URL 定位到一个 Servlet 呢？
+
+1. 首先，根据协议和端口号选定 Service 和 Engine。
+2. 然后，根据域名选定 Host。
+3. 之后，根据 URL 路径找到 Context 组件。
+4. 最后，根据 URL 路径找到 Wrapper（Servlet）。
+
+么这个调用过程具体是怎么实现的呢？答案是使用 Pipeline-Valve 管道。
+
+#### Pipeline
+
+Pipeline-Valve 是责任链模式，责任链模式是指在一个请求处理的过程中有很多处理者依次对请求进行处理，每个处理者负责做自己相应的处理，处理完之后将再调用下一个处理者继续处理。Valve 表示一个处理点，比如权限认证和记录日志。
+
+先来了解一下 Valve 和 Pipeline 接口的设计：
+
+![img](http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Pipeline与Valve.png)
+
+- 由于 Valve 是一个处理点，因此 invoke 方法就是来处理请求的。注意到 Valve 中有 getNext 和 setNext 方法，因此我们大概可以猜到有一个链表将 Valve 链起来了。
+- Pipeline 中有 addValve 方法。Pipeline 中维护了 Valve 链表，Valve 可以插入到 Pipeline 中，对请求做某些处理。我们还发现 Pipeline 中没有 invoke 方法，因为整个调用链的触发是 Valve 来完成的，Valve 完成自己的处理后，调用 getNext.invoke() 来触发下一个 Valve 调用。
+- 每一个容器都有一个 Pipeline 对象，只要触发这个 Pipeline 的第一个 Valve，这个容器里 Pipeline 中的 Valve 就都会被调用到。但是，不同容器的 Pipeline 是怎么链式触发的呢，比如 Engine 中 Pipeline 需要调用下层容器 Host 中的 Pipeline。
+- 这是因为 Pipeline 中还有个 getBasic 方法。这个 BasicValve 处于 Valve 链表的末端，它是 Pipeline 中必不可少的一个 Valve，负责调用下层容器的 Pipeline 里的第一个 Valve。
+
+![](http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/请求处理过程.png)
+
+整个调用过程由连接器中的 Adapter 触发的，它会调用 Engine 的第一个 Valve：
+
+```java
+connector.getService().getContainer().getPipeline().getFirst().invoke(request, response);
+```
 
 ## 4. Tomcat 工作原理
 
@@ -391,17 +525,6 @@ Tomcat 支持多种 I/O 模型和应用层协议。为了实现这点，一个�
 - 群。
 - **Pipeline** - 在容器中充当管道的作用，管道中可以设置各种 valve(阀门)，请求和响应在经由管 道中各个阀门处理，提供了一种灵活可配置的处理请求和响应的机制。
 - **Naming** - 命名服务，JNDI， Java 命名和目录接口，是一组在 Java 应用中访问命名和目录服务的 API。命名服务将名称和对象联系起来，使得我们可以用名称访问对象，目录服务也是一种命名 服务，对象不但有名称，还有属性。Tomcat 中可以使用 JNDI 定义数据源、配置信息，用于开发 与部署的分离。
-
-#### 4.1.1. Container 组件
-
-<div align="center">
-<img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/Tomcat-Container组件.jpg!zp" width="400" >
-</div>
-
-- **Engine** - Servlet 的顶层容器，包含一 个或多个 Host 子容器；
-- **Host** - 虚拟主机，负责 web 应用的部 署和 Context 的创建；
-- **Context** - Web 应用上下文，包含多个 Wrapper，负责 web 配置的解析、管 理所有的 Web 资源；
-- **Wrapper** - 最底层的容器，是对 Servlet 的封装，负责 Servlet 实例的创 建、执行和销毁。
 
 ### 4.2. Tomcat 生命周期
 
@@ -467,7 +590,7 @@ for (Future<Void> result ： results) {
 HostConfig 监听了 StandardHost 容器的事件，在 start 方法中解析上述配置文件：
 
 - 扫描 appbase 路径下的所有文件夹和 war 包，解析各个应用的 META-INF/context.xml，并 创建 StandardContext，并将 Context 加入到 Host 的子容器中。
-- 解析$catalina.base/EngineName/HostName/下的所有 Context 配置，找到相应 web 应 用的位置，解析各个应用的 META-INF/context.xml，并创建 StandardContext，并将 Context 加入到 Host 的子容器中。
+- 解析\$catalina.base/EngineName/HostName/下的所有 Context 配置，找到相应 web 应 用的位置，解析各个应用的 META-INF/context.xml，并创建 StandardContext，并将 Context 加入到 Host 的子容器中。
 
 注：
 
@@ -494,7 +617,7 @@ ContextConfig 解析 web.xml 顺序：
 #### 4.2.3. 请求处理过程
 
 <div align="center">
-<img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/请求处理过程.png!zp" width="600">
+<img src="http://dunwu.test.upcdn.net/cs/java/javaweb/tools/tomcat/请求处理过程.png" width="600">
 </div>
 
 1. 根据 server.xml 配置的指定的 connector 以及端口监听 http、或者 ajp 请求
@@ -645,6 +768,7 @@ onComplete 执行后，就不可再操作 request 和 response
 ## 5. 参考资料
 
 - **官方**
+
   - [Tomcat 官方网站](http://tomcat.apache.org/)
   - [Tomcat Wiki](http://wiki.apache.org/tomcat/FrontPage)
   - [Tomee 官方网站](http://tomee.apache.org/)
