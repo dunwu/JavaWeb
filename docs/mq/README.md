@@ -11,7 +11,6 @@
 - [消息队列面经](mq-interview.md)
 - [Kafka](kafka)
   - [Kafka 应用指南基础篇](kafka/kafka-basic.md)
-  - [Kafka 应用指南进阶篇](kafka/kafka-advance.md)
   - [Kafka 运维指南](kafka/kafka-ops.md)
 - [RocketMQ](rocketmq.md)
 - [ActiveMQ](activemq.md)
